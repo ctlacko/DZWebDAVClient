@@ -98,12 +98,6 @@ NSString const *DZWebDAVModificationDateKey	= @"modificationdate";
     [request setHTTPBody:[@"<?xml version=\"1.0\" encoding=\"utf-8\" ?><D:propfind xmlns:D=\"DAV:\"><D:allprop/></D:propfind>" dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];
 	AFHTTPRequestOperation *operation = [self HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-		if (responseObject && ![responseObject isKindOfClass:[NSDictionary class]]) {
-            		if (failure)
-                		failure(operation, [NSError errorWithDomain:AFNetworkingErrorDomain code:NSURLErrorCannotParseResponse userInfo:nil]);
-            		return;
-	        }
-        
 		id checkItems = [responseObject valueForKeyPath:@"multistatus.response.propstat.prop"];
         id checkHrefs = [responseObject valueForKeyPath:@"multistatus.response.href"];
 		
@@ -199,7 +193,7 @@ NSString const *DZWebDAVModificationDateKey	= @"modificationdate";
 - (void)put:(NSData *)data path:(NSString *)remoteDestination success:(void(^)(void))success failure:(void(^)(AFHTTPRequestOperation *, NSError *))failure {
     NSMutableURLRequest *request = [self requestWithMethod:@"PUT" path:remoteDestination parameters:nil];
 	[request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
-	[request setValue:[NSString stringWithFormat:@"%ld", (long)data.length] forHTTPHeaderField:@"Content-Length"];
+	[request setValue:[NSString stringWithFormat:@"%d", data.length] forHTTPHeaderField:@"Content-Length"];
 	AFHTTPRequestOperation *operation = [self mr_operationWithRequest:request success:success failure:failure];
 	operation.inputStream = [NSInputStream inputStreamWithData:data];
     [self enqueueHTTPRequestOperation:operation];

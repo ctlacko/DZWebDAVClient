@@ -5,7 +5,7 @@
 
 #import "DZXMLReader.h"
 
-NSString *const kXMLReaderTextNodeKey = @"text";
+NSString *const kXMLReaderTextNodeKeyDZWebDAV = @"text";
 
 @interface DZXMLReader () <NSXMLParserDelegate>
 
@@ -144,7 +144,7 @@ NSString *const kXMLReaderTextNodeKey = @"text";
         [secondToLast setObject:self.textInProgress forKey:elementName];
         self.textInProgress = [NSMutableString string];
     } else if (self.textInProgress.length) {
-        [dictInProgress setObject:self.textInProgress forKey:kXMLReaderTextNodeKey];
+        [dictInProgress setObject:self.textInProgress forKey:kXMLReaderTextNodeKeyDZWebDAV];
         self.textInProgress = [NSMutableString string];
     } else if (!dictInProgress.count) {
         if (secondToLast.count > 1) {
